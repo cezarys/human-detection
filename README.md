@@ -1,5 +1,5 @@
 #Human Detection
 
-One problem - Three approaches. 
+One Problem – Three Approaches
 
-This script detects if a picture contains human being. Three separate files for CV DNN, PyTorch and TensorFlow, all of them coded with FastAPI. Simple frontend included.
+This project detects whether a picture contains a human. It includes three separate scripts using CV DNN, PyTorch, and TensorFlow — each implemented with FastAPI. A simple frontend is also included.
