@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Human Detection Frontend</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+    }
+    h2 {
+      text-align: center;
+    }
+    label, select, input {
+      display: block;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007BFF;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    select
+    {
+        height:30px;
+        padding: 0 15px;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+    #result {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Human Detection</h2>
+
+  <form id="detectForm">
+    <label for="image">Select Image:</label>
+    <input type="file" id="image" name="image" accept="image/*" required>
+
+    <label for="api">Select API:</label>
+    <select id="api" name="api" required>
+      <option value="cv_dnn">OpenCV (cv.dnn)</option>
+      <option value="pytorch">PyTorch</option>
+      <option value="tensorflow">TensorFlow</option>
+    </select>
+
+    <button type="submit">Detect Human</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    document.getElementById('detectForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const fileInput = document.getElementById('image');
+      const apiSelect = document.getElementById('api');
+      const resultDiv = document.getElementById('result');
+
+      const file = fileInput.files[0];
+      const api = apiSelect.value;
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const url = `http://127.0.0.1:8000/detect/${api}`; // assumes backend is on same host/port
+
+      resultDiv.innerText = "Detecting...";
+
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          body: formData
+        });
+
+        const data = await res.json();
+
+        resultDiv.innerText = data.human_detected
+          ? "✅ Human Detected!"
+          : "❌ No Human Detected.";
+
+      } catch (err) {
+        console.error(err);
+        resultDiv.innerText = "Error during detection.";
+      }
+    });
+  </script>
+
+</body>
+</html>
